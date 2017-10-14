@@ -7,8 +7,10 @@ import javax.ws.rs.core.Response;
 
 @Path("/hello")
 public class HelloWorldService {
-//	http://localhost:8080/rest/hello/1233
-//	http://invest-182620.appspot.com//rest/hello/1233
+/*
+	http://localhost:8080/rest/hello/1233
+	http://invest-182620.appspot.com/rest/hello/1233
+ */
 	@GET
 	@Path("/{param}")
 	public Response getMsg(@PathParam("param") String msg) {
