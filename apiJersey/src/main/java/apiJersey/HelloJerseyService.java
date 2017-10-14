@@ -7,6 +7,9 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/helloJersey")
 public class HelloJerseyService {
+	
+//	http://localhost:8080/rest/helloJersey/client
+//	http://invest-182620.appspot.com//rest/helloJersey/client
        @GET
        @Path("/client")
        @Produces(MediaType.APPLICATION_JSON)
