@@ -7,6 +7,18 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>apiJersey Maven Webapp</name>
 	<url>http://maven.apache.org</url>
+	<properties>
+		<!-- INSTANCE_CONNECTION_NAME from Cloud Console > SQL > Instance Details 
+			> Properties or gcloud sql instances describe <instance> project:region:instance 
+			for Cloud SQL 2nd Generation or project:instance for Cloud SQL 1st Generation -->
+		<INSTANCE_CONNECTION_NAME>invest-182620:southamerica-east1:invest</INSTANCE_CONNECTION_NAME>
+		<user>ikeziri</user>
+		<password>29811307</password>
+		<database>invest</database>
+
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -42,7 +54,43 @@
 			<artifactId>jersey-json</artifactId>
 			<version>1.19</version>
 		</dependency>
+		<!-- hibernate here -->
 
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>4.3.10.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>4.3.10.Final</version>
+		</dependency>
+		<!-- Driver injected at runtime by the use of <use-google-connector-j> 
+			in appengine-web.xml -->
+		<dependency> <!-- Only used locally -->
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.42</version>  <!-- v5.x.x is for production, v6.x.x EAP X DevAPI -->
+		</dependency>
+		<dependency>
+			<groupId>com.google.cloud.sql</groupId>
+			<artifactId>mysql-socket-factory</artifactId> <!-- mysql-socket-factory-connector-j-6 if using 6.x.x -->
+			<version>1.0.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client-appengine</artifactId>
+			<version>1.23.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-api-1.0-sdk</artifactId>
+			<version>1.9.57</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>apiJersey</finalName>
@@ -52,8 +100,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.6.1</version>
 				<configuration>
-					<source>${version.java}</source>
-					<target>${version.java}</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -80,6 +128,28 @@
 				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>appengine-maven-plugin</artifactId>
 				<version>1.3.1</version>
+				<configuration>
+					<stage.enableJarSplitting>true</stage.enableJarSplitting>
+					<deploy.stopPreviousVersion>true</deploy.stopPreviousVersion>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.datanucleus</groupId>
+				<artifactId>maven-datanucleus-plugin</artifactId>
+				<version>3.2.0-m1</version>
+				<configuration>
+					<api>JDO</api>
+					<props>${basedir}/datanucleus.properties</props>
+					<verbose>true</verbose>
+					<enhancerName>ASM</enhancerName>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.datanucleus</groupId>
+						<artifactId>datanucleus-api-jdo</artifactId>
+						<version>3.1.3</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
