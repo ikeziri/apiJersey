@@ -24,14 +24,25 @@ public class InvestimentoResource {
 
 
 	/*
-	 * http://localhost:8080/rest/investimentoResource/listaAcoes
-	 * http://invest-182620.appspot.com/rest/investimentoResource/listaAcoes
+	 * http://localhost:8080/rest/investimentoResource/listarAcoes
+	 * http://invest-182620.appspot.com/rest/investimentoResource/listarAcoes
 	 */
 	@GET
-	@Path("/listaAcoes")
+	@Path("/listarAcoes")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response listaAcoes(@Context HttpServletRequest request) throws SQLException, IOException {
-		return Response.ok(InvestimentoController.getAcoes( ConnectionRequest.getConnection(request)), MediaType.APPLICATION_JSON).build();
+	public Response listarAcoes(@Context HttpServletRequest request) throws SQLException, IOException {
+		return Response.ok(InvestimentoController.listarAcoes( ConnectionRequest.getConnection(request)), MediaType.APPLICATION_JSON).build();
+	}
+	
+	/*
+	 * http://localhost:8080/rest/investimentoResource/listarAcoesConsolidada
+	 * http://invest-182620.appspot.com/rest/investimentoResource/listarAcoesConsolidada
+	 */
+	@GET
+	@Path("/listarAcoesConsolidada")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response listarAcoesConsolidada(@Context HttpServletRequest request) throws SQLException, IOException {
+		return Response.ok(InvestimentoController.listarAcoesConsolidada( ConnectionRequest.getConnection(request)), MediaType.APPLICATION_JSON).build();
 	}
 
 	/*

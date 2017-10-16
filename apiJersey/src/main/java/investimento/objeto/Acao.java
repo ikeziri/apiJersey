@@ -10,6 +10,8 @@ public class Acao {
 	private Integer quantidade;
 	private BigDecimal valor;
 	private BigDecimal custo;
+	private BigDecimal valorAtual;
+	private BigDecimal valorAbertura;
 
 	public Acao(String nome, String data, Integer quantidade, BigDecimal valor, BigDecimal custo) {
 		super();
@@ -73,5 +75,21 @@ public class Acao {
 	public String toString() {
 		return "Acao [nome=" + nome + ", data=" + data + ", quantidade=" + quantidade + ", valor=" + valor + ", custo="
 				+ custo + "]";
+	}
+
+	public BigDecimal getValorAtual() {
+		return valorAtual;
+	}
+
+	public void setValorAtual(BigDecimal valorAtual) {
+		this.valorAtual = valorAtual;
+	}
+
+	public BigDecimal getValorAbertura() {
+		return valorAbertura;
+	}
+
+	public void setValorAbertura(BigDecimal valorAbertura) {
+		this.valorAbertura = valorAbertura;
 	}
 }
