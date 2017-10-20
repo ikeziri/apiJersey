@@ -8,9 +8,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -104,11 +106,10 @@ public class InvestimentoController {
 			request.addHeader("content-type", "application/json");
 			HttpResponse result = httpClient.execute(request);
 			String json = EntityUtils.toString(result.getEntity(), "UTF-8");
-			System.out.println(json);
 			com.google.gson.Gson gson = new com.google.gson.Gson();
 			CotacaoUol cotacaoUol = gson.fromJson(json, CotacaoUol.class);
 			acao.setValorAtual(new BigDecimal(cotacaoUol.getPrice().replace(',', '.')));
-			acao.setValorAbertura(new BigDecimal(cotacaoUol.getOpen().replace(',', '.')));
+			acao.setValorAbertura((new BigDecimal(cotacaoUol.getPrice().replace(',', '.'))).subtract(new BigDecimal(cotacaoUol.getChange().replace(',', '.'))));
 		} catch (IOException e) {
 			
 		} catch (JsonSyntaxException e) {
