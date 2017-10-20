@@ -44,7 +44,7 @@ public class InvestimentoController {
 
 	public static ArrayList<Acao> listarAcoesConsolidada(Connection connection) throws SQLException, IOException {
 		ArrayList<Acao> acoes = new ArrayList<>();
-		final String selectSql = "SELECT nome, SUM(quantidade) AS quantidade , SUM( CASE WHEN quantidade > 0 THEN valor * quantidade + custo ELSE 0 END) / SUM(quantidade) AS valor  FROM invest.acoes GROUP BY nome HAVING quantidade > 0";
+		final String selectSql = "SELECT nome, SUM(quantidade) AS quantidade , SUM( CASE WHEN quantidade > 0  THEN valor * quantidade + custo ELSE custo END) / SUM( CASE WHEN quantidade > 0 THEN quantidade else 0 END) AS valor  FROM invest.acoes GROUP BY nome HAVING quantidade > 0";
 
 		try (ResultSet rs = connection.prepareStatement(selectSql).executeQuery()) {
 			while (rs.next()) {
