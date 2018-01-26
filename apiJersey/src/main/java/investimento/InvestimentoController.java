@@ -8,11 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -101,19 +98,45 @@ public class InvestimentoController {
 
 	private static void apurarCotacaoDia(Acao acao) {
 		try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
-			HttpGet request = new HttpGet("http://cotacoes.economia.uol.com.br/snapQuote.html?code=" + acao.getNome()
-					+ ".SA&_=" + (new Date()).getTime());
+			String link = "https://finance.google.com/finance?output=json&q=BVMF:" + acao.getNome();
+//			System.out.println(link);
+			HttpGet request = new HttpGet(link);
 			request.addHeader("content-type", "application/json");
 			HttpResponse result = httpClient.execute(request);
-			String json = EntityUtils.toString(result.getEntity(), "UTF-8");
+			String json = EntityUtils.toString(result.getEntity(), "UTF-8").replace("//", "");
 			com.google.gson.Gson gson = new com.google.gson.Gson();
-			CotacaoUol cotacaoUol = gson.fromJson(json, CotacaoUol.class);
-			acao.setValorAtual(new BigDecimal(cotacaoUol.getPrice().replace(',', '.')));
-			acao.setValorAbertura((new BigDecimal(cotacaoUol.getPrice().replace(',', '.'))).subtract(new BigDecimal(cotacaoUol.getChange().replace(',', '.'))));
+			CotacaoGoogle[]	 cotacaoGoogle = gson.fromJson(json, CotacaoGoogle[].class);
+			if (cotacaoGoogle[0] != null ) {
+//				System.out.println(cotacaoGoogle[0]);
+				if(cotacaoGoogle[0].getL() != null && cotacaoGoogle[0].getOp() != null ) {
+					acao.setValorAtual(new BigDecimal(cotacaoGoogle[0].getL().replace(',', '.')));
+					acao.setValorAbertura((new BigDecimal(cotacaoGoogle[0].getL().replace(',', '.'))).subtract(new BigDecimal(cotacaoGoogle[0].getC().replace(',', '.'))));
+				}
+			}
 		} catch (IOException e) {
-			
+//			System.out.println(e);
 		} catch (JsonSyntaxException e) {
+//			System.out.println(e);
 //			quando nao consegue fazer o parser eh pq nao encontrou a cotação
 		}
 	}
+	
+//	deprecated
+//	private static void apurarCotacaoDia(Acao acao) {
+//		try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+//			HttpGet request = new HttpGet("http://cotacoes.economia.uol.com.br/snapQuote.html?code=" + acao.getNome()
+//			+ ".SA&_=" + (new Date()).getTime());
+//			request.addHeader("content-type", "application/json");
+//			HttpResponse result = httpClient.execute(request);
+//			String json = EntityUtils.toString(result.getEntity(), "UTF-8");
+//			com.google.gson.Gson gson = new com.google.gson.Gson();
+//			CotacaoUol cotacaoUol = gson.fromJson(json, CotacaoUol.class);
+//			acao.setValorAtual(new BigDecimal(cotacaoUol.getPrice().replace(',', '.')));
+//			acao.setValorAbertura((new BigDecimal(cotacaoUol.getPrice().replace(',', '.'))).subtract(new BigDecimal(cotacaoUol.getChange().replace(',', '.'))));
+//		} catch (IOException e) {
+//			
+//		} catch (JsonSyntaxException e) {
+////			quando nao consegue fazer o parser eh pq nao encontrou a cotação
+//		}
+//	}
 }
